@@ -1,36 +1,28 @@
-import java.util.Scanner;
-
 public class PalindromeChecker {
 
+    // Application Version Constant
+    static final String APP_NAME = "Palindrome Checker App";
+    static final String VERSION = "1.0";
+
+    // Entry Point of the Application
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter a string: ");
-        String input = scanner.nextLine();
+        displayWelcomeMessage();
 
-        // Convert string to character array
-        char[] characters = input.toCharArray();
+        // After welcome, program can continue
+        System.out.println("\nApplication is ready...");
+        System.out.println("Proceeding to Palindrome Processing...\n");
+    }
 
-        int start = 0;
-        int end = characters.length - 1;
-        boolean isPalindrome = true;
-
-        // Two-pointer approach
-        while (start < end) {
-            if (characters[start] != characters[end]) {
-                isPalindrome = false;
-                break;
-            }
-            start++;
-            end--;
-        }
-
-        if (isPalindrome) {
-            System.out.println("The string is a Palindrome.");
-        } else {
-            System.out.println("The string is NOT a Palindrome.");
-        }
-
-        scanner.close();
+    // Method to display welcome message
+    public static void displayWelcomeMessage() {
+        System.out.println("=======================================");
+        System.out.println("       " + APP_NAME);
+        System.out.println("       Version: " + VERSION);
+        System.out.println("=======================================");
+        System.out.println("A console-based Java application");
+        System.out.println("to validate palindromes using");
+        System.out.println("multiple data structure approaches.");
+        System.out.println("=======================================");
     }
 }
