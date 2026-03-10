@@ -8,6 +8,43 @@ interface PalindromeStrategy {
     String getStrategyName();
 }
 
+class StringBuilderStrategy implements PalindromeStrategy {
+
+    @Override
+    public boolean check(String word) {
+        String normalized = word.toLowerCase().replaceAll("[^a-z0-9]", "");
+        return normalized.equals(new StringBuilder(normalized).reverse().toString());
+    }
+
+    @Override
+    public String getStrategyName() {
+        return "StringBuilder Strategy";
+    }
+}
+
+class TwoPointerStrategy implements PalindromeStrategy {
+
+    @Override
+    public boolean check(String word) {
+        String normalized = word.toLowerCase().replaceAll("[^a-z0-9]", "");
+        char[] chars = normalized.toCharArray();
+        int start = 0;
+        int end = chars.length - 1;
+
+        while (start < end) {
+            if (chars[start] != chars[end]) return false;
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    @Override
+    public String getStrategyName() {
+        return "Two Pointer Strategy";
+    }
+}
+
 class StackStrategy implements PalindromeStrategy {
 
     @Override
@@ -45,9 +82,7 @@ class DequeStrategy implements PalindromeStrategy {
         }
 
         while (deque.size() > 1) {
-            if (deque.pollFirst() != deque.pollLast()) {
-                return false;
-            }
+            if (deque.pollFirst() != deque.pollLast()) return false;
         }
 
         return true;
@@ -79,52 +114,35 @@ class RecursiveStrategy implements PalindromeStrategy {
     }
 }
 
-class PalindromeContext {
+class UC13_PalindromeCheckerApp {
 
-    private PalindromeStrategy strategy;
+    static void measurePerformance(PalindromeStrategy strategy, String word) {
+        long startTime = System.nanoTime();
+        boolean result = strategy.check(word);
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
 
-    public PalindromeContext(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+        System.out.println("Strategy            : " + strategy.getStrategyName());
+        System.out.println("Is it a Palindrome? : " + result);
+        System.out.println("Execution Time      : " + duration + " ns");
+        System.out.println();
     }
-
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean executeStrategy(String word) {
-        return strategy.check(word);
-    }
-
-    public String getStrategyName() {
-        return strategy.getStrategyName();
-    }
-}
-
-class PalindromeCheckerApp {
 
     public static void main(String[] args) {
-        System.out.println("--- UC12: Strategy Pattern for Palindrome Algorithms ---");
+        System.out.println("--- UC13: Performance Comparison ---");
 
         Scanner scanner = new Scanner(System.in);
         System.out.print("Input Text: ");
         String word = scanner.nextLine();
 
-        PalindromeContext context = new PalindromeContext(new StackStrategy());
-        System.out.println("Strategy            : " + context.getStrategyName());
         System.out.println("Input Text          : " + word);
-        System.out.println("Is it a Palindrome? : " + context.executeStrategy(word));
         System.out.println();
 
-        context.setStrategy(new DequeStrategy());
-        System.out.println("Strategy            : " + context.getStrategyName());
-        System.out.println("Input Text          : " + word);
-        System.out.println("Is it a Palindrome? : " + context.executeStrategy(word));
-        System.out.println();
-
-        context.setStrategy(new RecursiveStrategy());
-        System.out.println("Strategy            : " + context.getStrategyName());
-        System.out.println("Input Text          : " + word);
-        System.out.println("Is it a Palindrome? : " + context.executeStrategy(word));
+        measurePerformance(new StringBuilderStrategy(), word);
+        measurePerformance(new TwoPointerStrategy(), word);
+        measurePerformance(new StackStrategy(), word);
+        measurePerformance(new DequeStrategy(), word);
+        measurePerformance(new RecursiveStrategy(), word);
 
         scanner.close();
     }
